@@ -20,6 +20,26 @@ export default function Home() {
               abuse.
             </p>
 
+            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 mt-8">
+              <div className="text-sm text-zinc-400 mb-3">
+                Search Company Complaints
+              </div>
+
+              <form
+                action="/company/openai"
+                className="flex gap-3"
+              >
+                <input
+                  placeholder="Search company..."
+                  className="flex-1 bg-black border border-zinc-800 rounded-2xl px-5 py-4 outline-none focus:border-red-500"
+                />
+
+                <button className="px-6 py-4 rounded-2xl bg-red-600 hover:bg-red-500 transition font-semibold">
+                  Search
+                </button>
+              </form>
+            </div>
+
             <div className="flex gap-4 mt-8">
               <Link
                 href="/submit"
