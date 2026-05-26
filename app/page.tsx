@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 export default function Home() {
   return (
     <main className="min-h-screen bg-black text-white">
@@ -19,13 +21,19 @@ export default function Home() {
             </p>
 
             <div className="flex gap-4 mt-8">
-              <button className="px-6 py-4 rounded-2xl bg-red-600 hover:bg-red-500 transition font-semibold">
+              <Link
+                href="/submit"
+                className="px-6 py-4 rounded-2xl bg-red-600 hover:bg-red-500 transition font-semibold"
+              >
                 Submit Report
-              </button>
+              </Link>
 
-              <button className="px-6 py-4 rounded-2xl border border-zinc-700 hover:border-zinc-500 transition">
+              <Link
+                href="/rankings"
+                className="px-6 py-4 rounded-2xl border border-zinc-700 hover:border-zinc-500 transition"
+              >
                 Browse Rankings
-              </button>
+              </Link>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mt-12">
@@ -72,40 +80,10 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-
-              <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Refund request auto-closed instantly
-                    </h3>
-                    <p className="text-zinc-400 mt-1">OpenAI</p>
-                  </div>
-
-                  <span className="px-3 py-1 rounded-full bg-yellow-500/20 text-yellow-300 text-sm">
-                    Medium
-                  </span>
-                </div>
-              </div>
-
-              <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Fake live agent suspected
-                    </h3>
-                    <p className="text-zinc-400 mt-1">ShopFast</p>
-                  </div>
-
-                  <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-300 text-sm">
-                    High
-                  </span>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
-  );
+  )
 }
