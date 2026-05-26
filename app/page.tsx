@@ -1,6 +1,26 @@
+'use client'
+
 import Link from 'next/link'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+  const [search, setSearch] = useState('')
+  const router = useRouter()
+
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault()
+
+    if (!search.trim()) return
+
+    const slug = search
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, '-')
+
+    router.push(`/company/${slug}`)
+  }
+
   return (
     <main className="min-h-screen bg-black text-white">
       <section className="max-w-7xl mx-auto px-6 py-24">
@@ -26,10 +46,12 @@ export default function Home() {
               </div>
 
               <form
-                action="/company/openai"
+                onSubmit={handleSearch}
                 className="flex gap-3"
               >
                 <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search company..."
                   className="flex-1 bg-black border border-zinc-800 rounded-2xl px-5 py-4 outline-none focus:border-red-500"
                 />
