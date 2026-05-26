@@ -1,7 +1,25 @@
+import Link from 'next/link'
+
 export default function SubmitPage() {
   return (
     <main className="min-h-screen bg-black text-white p-10">
       <div className="max-w-4xl mx-auto">
+        <div className="flex items-center justify-between mb-8">
+          <Link
+            href="/"
+            className="px-5 py-3 rounded-2xl border border-zinc-700 hover:border-zinc-500 transition"
+          >
+            ← Back Home
+          </Link>
+
+          <Link
+            href="/rankings"
+            className="px-5 py-3 rounded-2xl border border-zinc-700 hover:border-zinc-500 transition"
+          >
+            Rankings
+          </Link>
+        </div>
+
         <div className="inline-flex px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-300 text-sm mb-6">
           Submit AI Failure Report
         </div>
