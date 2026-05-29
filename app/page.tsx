@@ -1,30 +1,23 @@
-'use client'
-
 import Link from 'next/link'
-import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { supabase } from '@/lib/supabase'
 
-export default function Home() {
-  const [search, setSearch] = useState('')
-  const router = useRouter()
-
-  function handleSearch(e: React.FormEvent) {
-    e.preventDefault()
-
-    if (!search.trim()) return
-
-    const slug = search
-      .toLowerCase()
-      .trim()
-      .replace(/\s+/g, '-')
-
-    router.push(`/company/${slug}`)
-  }
+export default async function Home() {
+  const { data: complaints } = await supabase
+    .from('complaints')
+    .select(`
+      *,
+      companies (
+        name,
+        slug
+      )
+    `)
+    .order('created_at', { ascending: false })
+    .limit(5)
 
   return (
     <main className="min-h-screen bg-black text-white">
       <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
           <div>
             <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-300 text-sm mb-6">
               AI Failure Intelligence Platform
@@ -36,33 +29,10 @@ export default function Home() {
 
             <p className="text-zinc-400 text-lg mt-6 max-w-xl leading-relaxed">
               HumanLayer monitors chatbot loops, fake support agents,
-              impossible refund systems, AI-generated spam, and automation
-              abuse.
+              impossible refund systems, AI-generated spam, and automation abuse.
             </p>
 
-            <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 mt-8">
-              <div className="text-sm text-zinc-400 mb-3">
-                Search Company Complaints
-              </div>
-
-              <form
-                onSubmit={handleSearch}
-                className="flex gap-3"
-              >
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="Search company..."
-                  className="flex-1 bg-black border border-zinc-800 rounded-2xl px-5 py-4 outline-none focus:border-red-500"
-                />
-
-                <button className="px-6 py-4 rounded-2xl bg-red-600 hover:bg-red-500 transition font-semibold">
-                  Search
-                </button>
-              </form>
-            </div>
-
-            <div className="flex gap-4 mt-8">
+            <div className="flex gap-4 mt-10 flex-wrap">
               <Link
                 href="/submit"
                 className="px-6 py-4 rounded-2xl bg-red-600 hover:bg-red-500 transition font-semibold"
@@ -76,52 +46,60 @@ export default function Home() {
               >
                 Browse Rankings
               </Link>
-            </div>
 
-            <div className="grid grid-cols-3 gap-4 mt-12">
-              <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5">
-                <div className="text-3xl font-black">12k+</div>
-                <div className="text-zinc-400 text-sm mt-1">
-                  Reports Filed
-                </div>
-              </div>
-
-              <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5">
-                <div className="text-3xl font-black">840</div>
-                <div className="text-zinc-400 text-sm mt-1">
-                  Companies Tracked
-                </div>
-              </div>
-
-              <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5">
-                <div className="text-3xl font-black">71%</div>
-                <div className="text-zinc-400 text-sm mt-1">
-                  No Human Support
-                </div>
-              </div>
+              <Link
+                href="/reports"
+                className="px-6 py-4 rounded-2xl border border-zinc-700 hover:border-zinc-500 transition"
+              >
+                View Latest Reports
+              </Link>
             </div>
           </div>
 
           <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-8 shadow-2xl">
-            <h2 className="text-2xl font-bold mb-6">
-              Latest AI Failure Reports
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold">
+                Latest AI Failure Reports
+              </h2>
+
+              <Link
+                href="/reports"
+                className="text-red-400 hover:text-red-300 transition"
+              >
+                View All →
+              </Link>
+            </div>
 
             <div className="space-y-4">
-              <div className="bg-zinc-900 rounded-2xl border border-zinc-800 p-5">
-                <div className="flex items-center justify-between gap-4">
-                  <div>
-                    <h3 className="font-semibold text-lg">
-                      Support bot looped for 2 hours
-                    </h3>
-                    <p className="text-zinc-400 mt-1">AirlineX</p>
-                  </div>
+              {complaints?.map((complaint: any) => (
+                <Link
+                  key={complaint.id}
+                  href={`/company/${complaint.companies.slug}`}
+                  className="block bg-zinc-900 rounded-2xl border border-zinc-800 p-5 hover:border-red-500/30 transition"
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <h3 className="font-semibold text-lg">
+                        {complaint.title}
+                      </h3>
 
-                  <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-300 text-sm">
-                    High
-                  </span>
+                      <p className="text-zinc-400 mt-1">
+                        {complaint.companies.name}
+                      </p>
+                    </div>
+
+                    <span className="px-3 py-1 rounded-full bg-red-500/20 text-red-300 text-sm">
+                      {complaint.issue_type}
+                    </span>
+                  </div>
+                </Link>
+              ))}
+
+              {!complaints?.length && (
+                <div className="text-zinc-500">
+                  No reports submitted yet.
                 </div>
-              </div>
+              )}
             </div>
           </div>
         </div>
